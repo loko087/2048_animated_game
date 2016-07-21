@@ -3,10 +3,10 @@
 //global variables
 window.onload = function () {
 	var targetWidth = 428;
-    var targetHeight= 600;
+    var targetHeight= 428;
     var deviceRatio = (window.innerWidth/window.innerHeight);
     var newRatio 	= (targetHeight/targetWidth)*deviceRatio;
-    var newWidth 	= targetWidth*newRatio;
+    var newWidth 	= targetWidth;
 	var newHeight 	= targetHeight;
 	var gameWidth 	= newWidth;
 	var gameHeight 	= newHeight;

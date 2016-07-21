@@ -27,6 +27,7 @@
 
       this.stage.backgroundColor  = this.backgroundColor;
       this.tileSprites = this.add.group();
+      this.tileSprites.align(4,4,this.tileSize, this.tileSize, Phaser.CENTER);
       this.addTwo();
       this.addTwo();
     },
@@ -189,7 +190,7 @@
       tile.alpha = 0;
       tile.frame = 624;
       console.log(scale)
-      tile.scale.setTo(scale,scale);
+      //tile.scale.setTo(scale,scale);
 
       var two         = this.createTileList(1,39);
       var four        = this.createTileList(40,79);

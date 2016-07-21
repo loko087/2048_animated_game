@@ -4,10 +4,10 @@
 //global variables
 window.onload = function () {
 	var targetWidth = 428;
-    var targetHeight= 600;
+    var targetHeight= 428;
     var deviceRatio = (window.innerWidth/window.innerHeight);
     var newRatio 	= (targetHeight/targetWidth)*deviceRatio;
-    var newWidth 	= targetWidth*newRatio;
+    var newWidth 	= targetWidth;
 	var newHeight 	= targetHeight;
 	var gameWidth 	= newWidth;
 	var gameHeight 	= newHeight;
@@ -122,6 +122,7 @@ module.exports = Menu;
 
       this.stage.backgroundColor  = this.backgroundColor;
       this.tileSprites = this.add.group();
+      this.tileSprites.align(4,4,this.tileSize, this.tileSize, Phaser.CENTER);
       this.addTwo();
       this.addTwo();
     },
@@ -284,7 +285,7 @@ module.exports = Menu;
       tile.alpha = 0;
       tile.frame = 624;
       console.log(scale)
-      tile.scale.setTo(scale,scale);
+      //tile.scale.setTo(scale,scale);
 
       var two         = this.createTileList(1,39);
       var four        = this.createTileList(40,79);
