@@ -2,15 +2,8 @@
 
 //global variables
 window.onload = function () {
-	var targetWidth = 428;
-    var targetHeight= 600;
-    var deviceRatio = (window.innerWidth/window.innerHeight);
-    var newRatio 	= (targetHeight/targetWidth)*deviceRatio;
-    var newWidth 	= targetWidth*newRatio;
-	var newHeight 	= targetHeight;
-	var gameWidth 	= newWidth;
-	var gameHeight 	= newHeight;
-
+	var gameWidth = 428;
+    var gameHeight= 600;
 	var game = new Phaser.Game(gameWidth,gameHeight, Phaser.AUTO, 'phaser');
 
 	// Game States
@@ -19,7 +12,5 @@ window.onload = function () {
 	game.state.add('menu', require('./states/menu'));
 	game.state.add('play', require('./states/play'));
 	game.state.add('preload', require('./states/preload'));
-
-
-	game.state.start('play');
+	game.state.start('boot');
 };

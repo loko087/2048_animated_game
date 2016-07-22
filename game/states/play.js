@@ -24,7 +24,7 @@
       // this.scale.forcePortrait = true;
       // this.scale.updateLayout(true);
       
-
+      
       this.stage.backgroundColor  = this.backgroundColor;
       this.tileSprites = this.add.group();
       this.addTwo();

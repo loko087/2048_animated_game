@@ -3,15 +3,8 @@
 
 //global variables
 window.onload = function () {
-	var targetWidth = 428;
-    var targetHeight= 600;
-    var deviceRatio = (window.innerWidth/window.innerHeight);
-    var newRatio 	= (targetHeight/targetWidth)*deviceRatio;
-    var newWidth 	= targetWidth*newRatio;
-	var newHeight 	= targetHeight;
-	var gameWidth 	= newWidth;
-	var gameHeight 	= newHeight;
-
+	var gameWidth = 428;
+    var gameHeight= 600;
 	var game = new Phaser.Game(gameWidth,gameHeight, Phaser.AUTO, 'phaser');
 
 	// Game States
@@ -20,9 +13,7 @@ window.onload = function () {
 	game.state.add('menu', require('./states/menu'));
 	game.state.add('play', require('./states/play'));
 	game.state.add('preload', require('./states/preload'));
-
-
-	game.state.start('play');
+	game.state.start('boot');
 };
 },{"./states/boot":2,"./states/gameover":3,"./states/menu":4,"./states/play":5,"./states/preload":6}],2:[function(require,module,exports){
 
@@ -119,7 +110,7 @@ module.exports = Menu;
       // this.scale.forcePortrait = true;
       // this.scale.updateLayout(true);
       
-
+      
       this.stage.backgroundColor  = this.backgroundColor;
       this.tileSprites = this.add.group();
       this.addTwo();
@@ -421,10 +412,6 @@ module.exports = Menu;
 
 'use strict';
 
-var fieldArray = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-var tileSprites;
-var canMove = false;
-
 function Preload() {
   this.asset = null;
   this.ready = false;
@@ -433,26 +420,20 @@ function Preload() {
 
 Preload.prototype = {
   preload: function() {
-    this.asset = this.add.sprite(this.width/2,this.height/2, 'preloader');
-    this.asset.anchor.setTo(0.5, 0.5);
-
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
+    this.asset = this.add.sprite(this.width/2,this.height/2,'preloader');
+    this.asset.anchor.setTo(0.5,0.5);
     this.load.setPreloadSprite(this.asset);
 
-    this.load.spritesheet("tile", "assets/2_small.png",107,107,40);
+    this.load.image('background','assets/background.bng');
+    this.load.image('startButton','assets/start-button.png');
+    this.load.image('title','assets/title.png');
   },
   create: function() {
-    this.asset.cropEnabled = false;
-    this.stage.backgroundColor = this.background;
-
-    var sprite = this.add.sprite(40,100,'ms');
-    sprite.animations.add('animated');
-    sprite.animations.play('animated',50,true);
+    
   },
   update: function() {
-    if(!!this.ready) {
-      this.game.state.start('menu');
-    }
+    
   },
   onLoadComplete: function() {
     this.ready = true;
