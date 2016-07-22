@@ -14,7 +14,7 @@
   }
   Play.prototype = {
     preload: function() {
-      this.load.spritesheet('tile','assets/tilesprite.png',this.tileSize,this.tileSize);
+      
     },
     create: function() {
 
@@ -24,31 +24,45 @@
       // this.scale.forcePortrait = true;
       // this.scale.updateLayout(true);
       
-      
-      this.stage.backgroundColor  = this.backgroundColor;
-      this.tileSprites = this.add.group();
+      this.game.stage.backgroundColor  = this.backgroundColor;
+      this.tileSprites = this.game.add.group();
       this.tileSprites.align(4,4,this.tileSize, this.tileSize, Phaser.CENTER);
+
+      this.tileSprites.x = 0;
+      this.tileSprites.y = 120;
+
       this.addTwo();
       this.addTwo();
     },
     update: function() {
       
       // listeners for WASD keys
-      this.upKey = this.input.keyboard.addKey(Phaser.Keyboard.W);
+      this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
       this.upKey.onDown.add(this.moveUp,this);
 
-      this.downKey = this.input.keyboard.addKey(Phaser.Keyboard.S);
+      this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
       this.downKey.onDown.add(this.moveDown,this);
 
-      this.leftKey = this.input.keyboard.addKey(Phaser.Keyboard.A);
+      this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
       this.leftKey.onDown.add(this.moveLeft,this);
 
-      this.rightKey = this.input.keyboard.addKey(Phaser.Keyboard.D);
+      this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
       this.rightKey.onDown.add(this.moveRight,this);
+    },
+    victory: function() {
+
+      this.tileSprites.destroy();
+
+      this.won = this.game.add.sprite(0,120,'2048');
+      this.won.animations.add('victory');
+      this.won.animations.play('victory',24,true);
+      this.won.scale.setTo(428/500,428/500);
+
     },
     moveUp: function() {
       var self = this;
       if (self.canMove) {
+
         self.canMove  = false;
         var moved     = false;
 
@@ -180,17 +194,19 @@
         var randomValue = Math.floor(Math.random()*16);
       } while(this.fieldArray[randomValue] != 0)
 
-      
-      this.fieldArray[randomValue] = 2;
+      var number = [2,4];
+
+      this.fieldArray[randomValue] = number[this.game.rnd.integerInRange(0,1)];
+
       var tileSize = this.tileSize;
       var scale  = (this.world.width/4/this.tileSize);
       var tile   = this.add.sprite(this.toCol(randomValue)*tileSize,this.toRow(randomValue)*tileSize,'tile');
-      //tile.anchor.setTo(0.5, 0.5);
+      
       tile.pos   = randomValue;
       tile.alpha = 0;
       tile.frame = 624;
       console.log(scale)
-      //tile.scale.setTo(scale,scale);
+      tile.scale.setTo(1,1);
 
       var two         = this.createTileList(1,39);
       var four        = this.createTileList(40,79);
@@ -277,6 +293,12 @@
 
       self.tileSprites.forEach(function(item) {
         var value = self.fieldArray[item.pos];
+
+        if (value == 2048) {
+          self.victory();
+          return;
+        }
+
         switch(value) {
           case 4:
             item.play('four');

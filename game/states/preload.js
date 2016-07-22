@@ -14,15 +14,20 @@ Preload.prototype = {
     this.asset.anchor.setTo(0.5,0.5);
     this.load.setPreloadSprite(this.asset);
 
-    this.load.image('background','assets/background.bng');
     this.load.image('startButton','assets/start-button.png');
-    this.load.image('title','assets/title.png');
+    
+    this.load.spritesheet('title','assets/title.png',500,115,50);
+    this.load.spritesheet('2048','assets/2048.png',500,500,121);
+
+    this.load.spritesheet('tile','assets/tilesprite.png',107,107);
   },
   create: function() {
-    
+    this.asset.cropEnabled = false;
   },
   update: function() {
-    
+    if(!!this.ready) {
+      this.game.state.start('menu');
+    }
   },
   onLoadComplete: function() {
     this.ready = true;

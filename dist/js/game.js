@@ -3,20 +3,8 @@
 
 //global variables
 window.onload = function () {
-<<<<<<< HEAD
 	var gameWidth = 428;
-    var gameHeight= 600;
-=======
-	var targetWidth = 428;
-    var targetHeight= 428;
-    var deviceRatio = (window.innerWidth/window.innerHeight);
-    var newRatio 	= (targetHeight/targetWidth)*deviceRatio;
-    var newWidth 	= targetWidth;
-	var newHeight 	= targetHeight;
-	var gameWidth 	= newWidth;
-	var gameHeight 	= newHeight;
-
->>>>>>> e9983492c2e33ecd08687fd1404193961b91c42c
+	var gameHeight= window.innerHeight;
 	var game = new Phaser.Game(gameWidth,gameHeight, Phaser.AUTO, 'phaser');
 
 	// Game States
@@ -28,7 +16,6 @@ window.onload = function () {
 	game.state.start('boot');
 };
 },{"./states/boot":2,"./states/gameover":3,"./states/menu":4,"./states/play":5,"./states/preload":6}],2:[function(require,module,exports){
-
 'use strict';
 
 function Boot() {
@@ -45,7 +32,6 @@ Boot.prototype = {
 };
 
 module.exports = Boot;
-
 },{}],3:[function(require,module,exports){
 
 'use strict';
@@ -84,12 +70,29 @@ Menu.prototype = {
 
   },
   create: function() {
-    
+    this.stage.backgroundColor = '57407c';
+
+    this.title = this.game.add.sprite(this.game.world.centerX,this.game.world.centerY-50,'title');
+    this.title.anchor.setTo(0.5,0.5);
+    this.title.scale.setTo(0.8,0.8);
+
+
+    this.startButton = this.game.add.button(this.game.world.centerX,this.game.world.centerY+50,'startButton', this.startButton, this);
+    this.startButton.anchor.setTo(0.5,0.5);
+
+    this.title.animations.add('waving');
+    this.title.animations.play('waving',24,true);
+
+    // jump to play stage for development
+    // this.game.state.start('play');
   },
   update: function() {
-    if(this.game.input.activePointer.justPressed()) {
-      this.game.state.start('play');
-    }
+    
+  },
+  startButton: function() {
+  	console.log('ssd')
+  	// start play state
+  	this.game.state.start('play');
   }
 };
 
@@ -112,7 +115,7 @@ module.exports = Menu;
   }
   Play.prototype = {
     preload: function() {
-      this.load.spritesheet('tile','assets/tilesprite.png',this.tileSize,this.tileSize);
+      
     },
     create: function() {
 
@@ -122,31 +125,45 @@ module.exports = Menu;
       // this.scale.forcePortrait = true;
       // this.scale.updateLayout(true);
       
-      
-      this.stage.backgroundColor  = this.backgroundColor;
-      this.tileSprites = this.add.group();
+      this.game.stage.backgroundColor  = this.backgroundColor;
+      this.tileSprites = this.game.add.group();
       this.tileSprites.align(4,4,this.tileSize, this.tileSize, Phaser.CENTER);
+
+      this.tileSprites.x = 0;
+      this.tileSprites.y = 120;
+
       this.addTwo();
       this.addTwo();
     },
     update: function() {
       
       // listeners for WASD keys
-      this.upKey = this.input.keyboard.addKey(Phaser.Keyboard.W);
+      this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
       this.upKey.onDown.add(this.moveUp,this);
 
-      this.downKey = this.input.keyboard.addKey(Phaser.Keyboard.S);
+      this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
       this.downKey.onDown.add(this.moveDown,this);
 
-      this.leftKey = this.input.keyboard.addKey(Phaser.Keyboard.A);
+      this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
       this.leftKey.onDown.add(this.moveLeft,this);
 
-      this.rightKey = this.input.keyboard.addKey(Phaser.Keyboard.D);
+      this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
       this.rightKey.onDown.add(this.moveRight,this);
+    },
+    victory: function() {
+
+      this.tileSprites.destroy();
+
+      this.won = this.game.add.sprite(0,120,'2048');
+      this.won.animations.add('victory');
+      this.won.animations.play('victory',24,true);
+      this.won.scale.setTo(428/500,428/500);
+
     },
     moveUp: function() {
       var self = this;
       if (self.canMove) {
+
         self.canMove  = false;
         var moved     = false;
 
@@ -278,17 +295,19 @@ module.exports = Menu;
         var randomValue = Math.floor(Math.random()*16);
       } while(this.fieldArray[randomValue] != 0)
 
-      
-      this.fieldArray[randomValue] = 2;
+      var number = [2,4];
+
+      this.fieldArray[randomValue] = number[this.game.rnd.integerInRange(0,1)];
+
       var tileSize = this.tileSize;
       var scale  = (this.world.width/4/this.tileSize);
       var tile   = this.add.sprite(this.toCol(randomValue)*tileSize,this.toRow(randomValue)*tileSize,'tile');
-      //tile.anchor.setTo(0.5, 0.5);
+      
       tile.pos   = randomValue;
       tile.alpha = 0;
       tile.frame = 624;
       console.log(scale)
-      //tile.scale.setTo(scale,scale);
+      tile.scale.setTo(1,1);
 
       var two         = this.createTileList(1,39);
       var four        = this.createTileList(40,79);
@@ -375,6 +394,12 @@ module.exports = Menu;
 
       self.tileSprites.forEach(function(item) {
         var value = self.fieldArray[item.pos];
+
+        if (value == 2048) {
+          self.victory();
+          return;
+        }
+
         switch(value) {
           case 4:
             item.play('four');
@@ -438,15 +463,20 @@ Preload.prototype = {
     this.asset.anchor.setTo(0.5,0.5);
     this.load.setPreloadSprite(this.asset);
 
-    this.load.image('background','assets/background.bng');
     this.load.image('startButton','assets/start-button.png');
-    this.load.image('title','assets/title.png');
+    
+    this.load.spritesheet('title','assets/title.png',500,115,50);
+    this.load.spritesheet('2048','assets/2048.png',500,500,121);
+
+    this.load.spritesheet('tile','assets/tilesprite.png',107,107);
   },
   create: function() {
-    
+    this.asset.cropEnabled = false;
   },
   update: function() {
-    
+    if(!!this.ready) {
+      this.game.state.start('menu');
+    }
   },
   onLoadComplete: function() {
     this.ready = true;
