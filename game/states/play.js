@@ -10,7 +10,9 @@
     this.leftKey;
     this.rightKey;
     this.backgroundColor = '57407c';
-
+    this.font = "flappyfont";
+    this.score= 0;
+    this.scoreString = "SCORE \n";
   }
   Play.prototype = {
     preload: function() {
@@ -24,7 +26,15 @@
       // this.scale.forcePortrait = true;
       // this.scale.updateLayout(true);
       
+      // background color
       this.game.stage.backgroundColor  = this.backgroundColor;
+
+      // add text      
+      this.scoreText = this.game.add.bitmapText(this.game.width/2,60,"flappyfont",this.scoreString + this.score.toString(),24);
+      this.scoreText.align = 'center';
+      this.scoreText.anchor.setTo(0.5,0.5);
+
+      // declare group of tiles
       this.tileSprites = this.game.add.group();
       this.tileSprites.align(4,4,this.tileSize, this.tileSize, Phaser.CENTER);
 
@@ -33,6 +43,9 @@
 
       this.addTwo();
       this.addTwo();
+
+      // audio added
+      this.scoreSound = this.game.add.audio('score');
     },
     update: function() {
       
@@ -283,10 +296,16 @@
 
         movement.onComplete.add(function(){
           tile.destroy();
+          self.checkScore(self.fieldArray[to]);
         });
       }
 
       movement.start();
+    },
+    checkScore: function(score) {
+      this.score = this.score + score;
+      this.scoreText.setText(this.scoreString + this.score.toString());
+      this.scoreSound.play();
     },
     updateNumbers: function() {
       var self = this;

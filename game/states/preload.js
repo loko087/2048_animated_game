@@ -20,6 +20,11 @@ Preload.prototype = {
     this.load.spritesheet('2048','assets/2048.png',500,500,121);
 
     this.load.spritesheet('tile','assets/tilesprite.png',107,107);
+
+    this.load.bitmapFont('flappyfont','assets/fonts/flappyfont/flappyfont.png','assets/fonts/flappyfont/flappyfont.fnt');
+  
+    // loading audio files
+    this.load.audio('score', 'assets/score.wav');
   },
   create: function() {
     this.asset.cropEnabled = false;
