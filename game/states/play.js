@@ -72,6 +72,12 @@
       this.won.scale.setTo(428/500,428/500);
 
     },
+    gameOver: function() {
+      this.tileSprites.destroy();
+
+      // this.lost = this.game.add.sprite(0,120,'gameover');
+      
+    },
     moveUp: function() {
       var self = this;
       if (self.canMove) {
@@ -218,7 +224,7 @@
       tile.pos   = randomValue;
       tile.alpha = 0;
       tile.frame = 624;
-      console.log(scale)
+      
       tile.scale.setTo(1,1);
 
       var two         = this.createTileList(1,39);
@@ -254,6 +260,11 @@
         self.canMove = true;
       });
       fadeIn.start();
+
+      if (!self.tileAvailable()) {
+        if (self.tileMatchesAvailable()) self.gameOver();
+      }
+
     },
     toRow: function(n) {
       return Math.floor(n/4);
@@ -279,6 +290,35 @@
         // otherwise just let the player be able to move again
         this.canMove=true;
       }
+    },
+    tileAvailable: function() {
+      var self = this;
+
+      self.fieldArray.forEach(function(item) {
+        if (item == 0) return true;
+      })
+
+      return false;
+    },
+
+    tileMatchesAvailable: function() {
+      var self = this;
+      var size = self.fieldArray.length();
+      var tilePerRow = 4;
+      var left, right, top, bottom;
+      var checkPos = [-1,1,-4,4];
+
+      console.log(size)
+      for (var i = 0; i < size; i++) {
+        for (var j = 0; j < checkPos.length; j++) {
+          var pos = checkPos[j] +  self.fieldArray[i];
+          if (pos > 0 && self.fieldArray[i] == self.fieldArray[j]) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     },
 
     moveTile: function(tile,from, to, remove) {
