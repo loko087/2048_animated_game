@@ -205,7 +205,7 @@
       tile.pos   = randomValue;
       tile.alpha = 0;
       tile.frame = 624;
-      console.log(scale)
+      console.log(tile);
       tile.scale.setTo(1,1);
 
       var two         = this.createTileList(1,39);

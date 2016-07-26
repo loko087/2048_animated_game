@@ -84,7 +84,7 @@ Menu.prototype = {
     this.title.animations.play('waving',24,true);
 
     // jump to play stage for development
-    // this.game.state.start('play');
+     this.game.state.start('play');
   },
   update: function() {
     
@@ -306,7 +306,7 @@ module.exports = Menu;
       tile.pos   = randomValue;
       tile.alpha = 0;
       tile.frame = 624;
-      console.log(scale)
+      console.log(tile);
       tile.scale.setTo(1,1);
 
       var two         = this.createTileList(1,39);
