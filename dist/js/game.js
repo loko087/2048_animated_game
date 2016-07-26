@@ -84,14 +84,13 @@ Menu.prototype = {
     this.title.animations.play('waving',24,true);
 
     // jump to play stage for development
-     this.game.state.start('play');
+    // this.game.state.start('play');
 
   },
   update: function() {
     
   },
   startButton: function() {
-  	console.log('ssd')
   	// start play state
   	this.game.state.start('play');
   }
@@ -103,9 +102,8 @@ module.exports = Menu;
 
   'use strict';
   function Play() {
-    this.fieldArray = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.init();
     this.tileSize = 107;
-    this.canMove  = false;
     this.tileSprites;
     this.upKey;
     this.downKey;
@@ -113,7 +111,6 @@ module.exports = Menu;
     this.rightKey;
     this.backgroundColor = '57407c';
     this.font = "flappyfont";
-    this.score= 0;
     this.scoreString = "SCORE \n";
   }
   Play.prototype = {
@@ -121,12 +118,6 @@ module.exports = Menu;
       
     },
     create: function() {
-
-      // this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-      // this.scale.pageAlignHorizontally = true;
-      // this.scale.pageAlignVertically = true;
-      // this.scale.forcePortrait = true;
-      // this.scale.updateLayout(true);
       
       // background color
       this.game.stage.backgroundColor  = this.backgroundColor;
@@ -148,6 +139,9 @@ module.exports = Menu;
 
       // audio added
       this.scoreSound = this.game.add.audio('score');
+
+      this.replayButton = this.game.add.button(this.game.width*1/4,60,'replayButton', this.newGame, this);
+      this.replayButton.anchor.setTo(0.5,0.5);
     },
     update: function() {
       
@@ -164,6 +158,16 @@ module.exports = Menu;
       this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
       this.rightKey.onDown.add(this.moveRight,this);
     },
+    init: function() {
+      this.fieldArray = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+      this.score= 0;
+      this.canMove  = false;
+    },
+    newGame: function() {
+      this.init();
+      this.game.state.start('play');
+    },
+
     victory: function() {
 
       this.tileSprites.destroy();
@@ -316,7 +320,7 @@ module.exports = Menu;
     },
 
     addTwo: function() {
-
+      console.log(this.fieldArray)
       do {
         var randomValue = Math.floor(Math.random()*16);
       } while(this.fieldArray[randomValue] != 0)
@@ -541,6 +545,7 @@ Preload.prototype = {
     this.load.setPreloadSprite(this.asset);
 
     this.load.image('startButton','assets/start-button.png');
+    this.load.image('replayButton','assets/replay-button.png');
     
     this.load.spritesheet('title','assets/title.png',500,115,50);
     this.load.spritesheet('2048','assets/2048.png',500,500,121);

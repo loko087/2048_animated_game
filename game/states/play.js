@@ -1,9 +1,8 @@
 
   'use strict';
   function Play() {
-    this.fieldArray = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.init();
     this.tileSize = 107;
-    this.canMove  = false;
     this.tileSprites;
     this.upKey;
     this.downKey;
@@ -11,7 +10,6 @@
     this.rightKey;
     this.backgroundColor = '57407c';
     this.font = "flappyfont";
-    this.score= 0;
     this.scoreString = "SCORE \n";
   }
   Play.prototype = {
@@ -19,12 +17,6 @@
       
     },
     create: function() {
-
-      // this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-      // this.scale.pageAlignHorizontally = true;
-      // this.scale.pageAlignVertically = true;
-      // this.scale.forcePortrait = true;
-      // this.scale.updateLayout(true);
       
       // background color
       this.game.stage.backgroundColor  = this.backgroundColor;
@@ -46,6 +38,9 @@
 
       // audio added
       this.scoreSound = this.game.add.audio('score');
+
+      this.replayButton = this.game.add.button(this.game.width*1/4,60,'replayButton', this.newGame, this);
+      this.replayButton.anchor.setTo(0.5,0.5);
     },
     update: function() {
       
@@ -62,6 +57,16 @@
       this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
       this.rightKey.onDown.add(this.moveRight,this);
     },
+    init: function() {
+      this.fieldArray = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+      this.score= 0;
+      this.canMove  = false;
+    },
+    newGame: function() {
+      this.init();
+      this.game.state.start('play');
+    },
+
     victory: function() {
 
       this.tileSprites.destroy();
@@ -214,7 +219,7 @@
     },
 
     addTwo: function() {
-
+      console.log(this.fieldArray)
       do {
         var randomValue = Math.floor(Math.random()*16);
       } while(this.fieldArray[randomValue] != 0)

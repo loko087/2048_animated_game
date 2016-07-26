@@ -15,6 +15,7 @@ Preload.prototype = {
     this.load.setPreloadSprite(this.asset);
 
     this.load.image('startButton','assets/start-button.png');
+    this.load.image('replayButton','assets/replay-button.png');
     
     this.load.spritesheet('title','assets/title.png',500,115,50);
     this.load.spritesheet('2048','assets/2048.png',500,500,121);

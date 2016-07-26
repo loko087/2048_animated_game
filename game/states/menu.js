@@ -21,14 +21,13 @@ Menu.prototype = {
     this.title.animations.play('waving',24,true);
 
     // jump to play stage for development
-     this.game.state.start('play');
+    // this.game.state.start('play');
 
   },
   update: function() {
     
   },
   startButton: function() {
-  	console.log('ssd')
   	// start play state
   	this.game.state.start('play');
   }
