@@ -10,7 +10,9 @@
     this.leftKey;
     this.rightKey;
     this.backgroundColor = '57407c';
-
+    this.font = "flappyfont";
+    this.score= 0;
+    this.scoreString = "SCORE \n";
   }
   Play.prototype = {
     preload: function() {
@@ -24,7 +26,15 @@
       // this.scale.forcePortrait = true;
       // this.scale.updateLayout(true);
       
+      // background color
       this.game.stage.backgroundColor  = this.backgroundColor;
+
+      // add text      
+      this.scoreText = this.game.add.bitmapText(this.game.width*3/4,60,"flappyfont",this.scoreString + this.score.toString(),24);
+      this.scoreText.align = 'center';
+      this.scoreText.anchor.setTo(0.5,0.5);
+
+      // declare group of tiles
       this.tileSprites = this.game.add.group();
       this.tileSprites.align(4,4,this.tileSize, this.tileSize, Phaser.CENTER);
 
@@ -33,6 +43,9 @@
 
       this.addTwo();
       this.addTwo();
+
+      // audio added
+      this.scoreSound = this.game.add.audio('score');
     },
     update: function() {
       
@@ -58,6 +71,18 @@
       this.won.animations.play('victory',24,true);
       this.won.scale.setTo(428/500,428/500);
 
+    },
+    gameOver: function() {
+      this.canMove = false;
+      this.tileSprites.destroy();
+      
+      this.lost = this.game.add.sprite(0,120,'gameover');
+      this.lost.animations.add('gameover');
+      this.lost.animations.play('gameover',24,true);
+      this.lost.scale.setTo(428/500,428/500);
+
+      console.log("Game Over");
+      
     },
     moveUp: function() {
       var self = this;
@@ -194,7 +219,7 @@
         var randomValue = Math.floor(Math.random()*16);
       } while(this.fieldArray[randomValue] != 0)
 
-      var number = [2,4];
+      var number = [2,2];
 
       this.fieldArray[randomValue] = number[this.game.rnd.integerInRange(0,1)];
 
@@ -205,7 +230,6 @@
       tile.pos   = randomValue;
       tile.alpha = 0;
       tile.frame = 624;
-      console.log(tile);
       tile.scale.setTo(1,1);
 
       var two         = this.createTileList(1,39);
@@ -241,6 +265,12 @@
         self.canMove = true;
       });
       fadeIn.start();
+
+      console.log(self.tileAvailable())
+      if (!self.tileAvailable()) {
+        if (!self.tileMatchesAvailable()) self.gameOver();
+      }
+
     },
     toRow: function(n) {
       return Math.floor(n/4);
@@ -267,6 +297,46 @@
         this.canMove=true;
       }
     },
+    tileAvailable: function() {
+      var self = this;
+      var avai = false;
+
+      self.fieldArray.forEach(function(item) {
+        if (item == 0) {
+          avai = true;
+          return avai;
+        }
+      })
+
+      return avai;
+    },
+
+    tileMatchesAvailable: function() {
+
+      var self = this;
+      var size = self.fieldArray.length;
+      var tilePerRow = 4;
+      var left, right, top, bottom;
+      var checkPos = [-1,1,-4,4];
+      var match    = true;
+
+      for (var i = 0; i < size; i++) {
+        for (var j = 0; j < checkPos.length; j++) {
+          var pos = checkPos[j] +  i;
+          if ( pos > 0 ) {
+            
+            if ((self.fieldArray[i] == self.fieldArray[pos])) {
+              match = false;
+              return;
+            } 
+            
+          }
+        }
+      }
+
+      console.log(match);
+      return match;
+    },
 
     moveTile: function(tile,from, to, remove) {
       var self = this;
@@ -283,10 +353,16 @@
 
         movement.onComplete.add(function(){
           tile.destroy();
+          self.checkScore(self.fieldArray[to]);
         });
       }
 
       movement.start();
+    },
+    checkScore: function(score) {
+      this.score = this.score + score;
+      this.scoreText.setText(this.scoreString + this.score.toString());
+      this.scoreSound.play();
     },
     updateNumbers: function() {
       var self = this;

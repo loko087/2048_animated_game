@@ -22,6 +22,7 @@ Menu.prototype = {
 
     // jump to play stage for development
      this.game.state.start('play');
+
   },
   update: function() {
     
