@@ -9,6 +9,14 @@
 3. bower install
 4. grunt
 
+# Time goal: 
+whenever I want to code this game
+
+# Coming Soon
+- Web deployment
+- Android deployment
+- IOS deployment (Apple ID is expensive ... thinking )
+
 # Reference
 All assets are generated from the source: http://www.romaincousin.fr/2048
 
