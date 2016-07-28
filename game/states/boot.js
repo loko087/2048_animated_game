@@ -12,27 +12,26 @@ Boot.prototype = {
     this.game.state.start('preload');
 
     var gameWidth = 428;
-	var gameHeight= 650;
+    var gameHeight= 650;
 
-    if (this.game.device.desktop) {
-       this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;            
-       this.game.scale.minWidth = gameWidth/2;            
-       this.game.scale.minHeight = gameHeight/2;            
+    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;            
+    this.game.scale.minWidth = gameWidth/2;            
+    this.game.scale.minHeight = gameHeight/2;
+    this.game.scale.pageAlignHorizontally = true;            
+    this.game.scale.pageAlignVertically = true; 
+
+    if (this.game.device.desktop || window.innerWidth < 500) {
+                   
        this.game.scale.maxWidth = gameWidth;            
-       this.game.scale.maxHeight = gameHeight;            
-       this.game.scale.pageAlignVertically = true;            
-       this.game.scale.pageAlignVertically = true;    
+       this.game.scale.maxHeight = gameHeight;             
 
-    } else {            
-    	this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;            
-    	this.game.scale.minWidth = gameWidth/2;            
-    	this.game.scale.minHeight = gameHeight/2;            
-    	this.game.scale.maxWidth = 428; 
+    } else {   
+      console.log('sdsd')                   
+    	this.game.scale.maxWidth = gameWidth; 
     	//You can change this to gameWidth*2.5 if needed            
-    	this.game.scale.maxHeight = window.innerHeight; 
+    	this.game.scale.maxHeight = gameWidth*1.5; 
     	//Make sure these values are proportional to the gameWidth and gameHeight            
-    	this.game.scale.pageAlignHorizontally = true;            
-    	this.game.scale.pageAlignVertically = true;            
+           
     	this.game.scale.forceOrientation(true, false);            
     	this.game.scale.hasResized.add(this.gameResized, this);            
     	this.game.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);            

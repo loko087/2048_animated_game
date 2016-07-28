@@ -11,6 +11,9 @@
     this.backgroundColor = '57407c';
     this.font = "flappyfont";
     this.scoreString = "SCORE \n";
+
+    // variables used to detect and manage swipes
+    this.startX, this.startY, this.endX, this.endY;
   }
   Play.prototype = {
     preload: function() {
@@ -42,21 +45,63 @@
 
       this.replayButton = this.game.add.button(this.game.width*1/4,60,'replayButton', this.newGame, this);
       this.replayButton.anchor.setTo(0.5,0.5);
+
+      this.game.input.onDown.add(this.beginSwipe, this);
     },
     update: function() {
-      
-      // listeners for WASD keys
-      this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-      this.upKey.onDown.add(this.moveUp,this);
+      	
+      	// if (this.game.device.desktop) {
+	      // listeners for WASD keys
+		this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+		this.upKey.onDown.add(this.moveUp,this);
 
-      this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-      this.downKey.onDown.add(this.moveDown,this);
+		this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+		this.downKey.onDown.add(this.moveDown,this);
 
-      this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-      this.leftKey.onDown.add(this.moveLeft,this);
+		this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+		this.leftKey.onDown.add(this.moveLeft,this);
 
-      this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-      this.rightKey.onDown.add(this.moveRight,this);
+		this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
+		this.rightKey.onDown.add(this.moveRight,this);
+
+		// once the level has been created, we wait for the player to touch or click, then we call
+		// beginSwipe function
+		this.game.input.onDown.add(this.beginSwipe, this);
+    },
+    beginSwipe: function() {
+    	console.log('swipe')
+    	var self = this;
+    	self.startX = self.game.input.worldX;
+    	self.startY = self.game.input.worldY;
+
+    	self.game.input.onDown.remove(self.beginSwipe, this);
+    	self.game.input.onUp.add(self.endSwipe, this);
+    },
+    endSwipe: function() {
+    	var self = this;
+    	
+    	// saving mouse/finger coordinates
+    	self.endX = self.game.input.worldX;
+    	self.endY = self.game.input.worldY;
+
+    	//detect distance of begin/end of x/y
+    	var distX = self.endX - self.startX;
+    	var distY = self.endY - self.startY;
+
+    	// horizontal swipe
+    	// x distance is at least twice the y distance 
+    	// and the amount of horizontal distance is at least 10 pixels
+    	if (Math.abs(distX) > Math.abs(distY)*2 && Math.abs(distX) > 10) {
+    		(distX > 0) ? self.moveRight():self.moveLeft();
+    	}
+
+    	// vertical swipe
+    	if (Math.abs(distY) > Math.abs(distX)*2 && Math.abs(distY) > 10) {
+    		(distY > 0) ? self.moveDown():self.moveUp();
+    	}
+
+    	self.game.input.onDown.add(self.beginSwipe, self);
+    	self.game.input.onUp.remove(self.endSwipe, self);
     },
     init: function() {
       this.fieldArray = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
