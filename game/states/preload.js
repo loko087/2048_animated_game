@@ -14,6 +14,7 @@ Preload.prototype = {
     this.asset.anchor.setTo(0.5,0.5);
     this.load.setPreloadSprite(this.asset);
 
+    this.load.image('background','assets/background.png');
     this.load.image('startButton','assets/start-button.png');
     this.load.image('replayButton','assets/replay-button.png');
     

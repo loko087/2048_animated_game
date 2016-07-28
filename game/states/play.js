@@ -27,8 +27,9 @@
       this.scoreText.anchor.setTo(0.5,0.5);
 
       // declare group of tiles
+      var tileSize = window.innerWidth/4;
       this.tileSprites = this.game.add.group();
-      this.tileSprites.align(4,4,this.tileSize, this.tileSize, Phaser.CENTER);
+      this.tileSprites.align(4,4,tileSize,tileSize, Phaser.CENTER);
 
       this.tileSprites.x = 0;
       this.tileSprites.y = 120;
@@ -224,7 +225,7 @@
         var randomValue = Math.floor(Math.random()*16);
       } while(this.fieldArray[randomValue] != 0)
 
-      var number = [2,2];
+      var number = [2,4];
 
       this.fieldArray[randomValue] = number[this.game.rnd.integerInRange(0,1)];
 
