@@ -17,8 +17,5 @@ whenever I want to code this game
 - Android deployment
 - IOS deployment (Apple ID is expensive ... thinking )
 
-# Reference
-All assets are generated from the source: http://www.romaincousin.fr/2048
-
 # License
 Copyright (c) 2016 Hien Luong. All work in this package is distributed under the MIT License.
