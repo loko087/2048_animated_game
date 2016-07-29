@@ -13,10 +13,9 @@ Preload.prototype = {
     this.asset = this.game.add.sprite(this.game.width/2,this.game.height/2,'preloader');
     this.asset.anchor.setTo(0.5,0.5);
     this.game.load.setPreloadSprite(this.asset);
-    //this.load.spritesheet('preloader','preloader.png',220,19,10);
-    // this.asset.anchor.setTo(0.5,0.5);
-    // this.load.setPreloadSprite(this.asset);
 
+    this.load.image('waveone','assets/waves.gif');
+    this.load.image('wavetwo','assets/waves.gif');
     this.load.image('background','assets/background.png');
     this.load.image('startButton','assets/start-button.png');
     this.load.image('replayButton','assets/replay-button.png');

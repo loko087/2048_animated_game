@@ -3,7 +3,7 @@
 //global variables
 window.onload = function () {
 	var gameWidth = 428;
-	var gameHeight= 650;
+	var gameHeight= window.innerHeight;
 	var game = new Phaser.Game(gameWidth,gameHeight, Phaser.AUTO, 'phaser');
 
 	// Game States

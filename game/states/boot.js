@@ -9,39 +9,29 @@ Boot.prototype = {
   },
   create: function() {
     this.game.input.maxPointers = 1;
+    this.scaleStage();
+
     this.game.state.start('preload');
+  },
+  scaleStage: function() {
+    this.gameWidth = 428;
+    this.gameHeight= 700;
 
-    var gameWidth = 428;
-    var gameHeight= 650;
-
-    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;            
-    this.game.scale.minWidth = gameWidth/2;            
-    this.game.scale.minHeight = gameHeight/2;
-    this.game.scale.pageAlignHorizontally = true;            
-    this.game.scale.pageAlignVertically = true; 
-
-    if (this.game.device.desktop || window.innerWidth < 500) {
-                   
-       this.game.scale.maxWidth = gameWidth;            
-       this.game.scale.maxHeight = gameHeight;             
-
-    } else {   
-                       
-    	this.game.scale.maxWidth = gameWidth; 
-    	//You can change this to gameWidth*2.5 if needed            
-    	this.game.scale.maxHeight = gameWidth*1.5; 
-    	//Make sure these values are proportional to the gameWidth and gameHeight            
-           
-    	this.game.scale.forceOrientation(true, false);            
-    	this.game.scale.hasResized.add(this.gameResized, this);            
-    	this.game.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);            
-    	this.game.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);            
+    if (this.game.device.desktop || this.game.width > 500) {
+      this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL; 
+    } else {
+      this.scale.scaleMode = Phaser.ScaleManager.NO_BORDER;
+      this.scale.forceOrientation(true, true);
     }
-
-    this.game.scale.parentIsWindow = true;        
-    this.game.scale.refresh();
-
-  }
+    
+    this.scale.minWidth = this.gameWidth/2;
+    this.scale.minHeight = this.gameHeight/2;
+    this.scale.maxWidth = this.gameWidth;
+    this.scale.maxHeight = this.gameHeight;
+  
+    // document.getElementById("phaser").style.height = window.innerHeight-30+"px";//The css for body includes 1px top margin, I believe this is the cause for this -1
+    // document.getElementById("phaser").style.overflow = "hidden";
+  }, 
 };
 
 module.exports = Boot;

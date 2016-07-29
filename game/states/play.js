@@ -8,10 +8,10 @@
     this.downKey;
     this.leftKey;
     this.rightKey;
-    this.backgroundColor = '57407c';
-    this.font = "flappyfont";
-    this.scoreString = "SCORE \n";
-
+    this.backgroundColor  = '57407c';
+    this.font             = "flappyfont";
+    this.scoreString      = "SCORE \n";
+    
     // variables used to detect and manage swipes
     this.startX, this.startY, this.endX, this.endY;
   }
@@ -20,9 +20,15 @@
       
     },
     create: function() {
-      
+      this.tileSpriteY      = this.game.width*1/3;
       // background color
       this.game.stage.backgroundColor  = this.backgroundColor;
+
+      this.waveone = this.game.add.sprite(this.game.width/2,120, 'waveone');
+      this.waveone.anchor.setTo(0.5,0.5);
+
+      // this.wavetwo = this.game.add.sprite(this.game.width/2,592, 'wavetwo');
+      // this.wavetwo.anchor.setTo(0.5,0.5);
 
       // add text      
       this.scoreText = this.game.add.bitmapText(this.game.width*3/4,60,"flappyfont",this.scoreString + this.score.toString(),24);
@@ -35,7 +41,7 @@
       this.tileSprites.align(4,4,tileSize,tileSize, Phaser.CENTER);
 
       this.tileSprites.x = 0;
-      this.tileSprites.y = 120;
+      this.tileSprites.y = this.tileSpriteY;
 
       this.addTwo();
       this.addTwo();
@@ -117,7 +123,7 @@
 
       this.tileSprites.destroy();
 
-      this.won = this.game.add.sprite(0,120,'2048');
+      this.won = this.game.add.sprite(0,this.tileSpriteY,'2048');
       this.won.animations.add('victory');
       this.won.animations.play('victory',24,true);
       this.won.scale.setTo(428/500,428/500);
@@ -127,7 +133,7 @@
       this.canMove = false;
       this.tileSprites.destroy();
       
-      this.lost = this.game.add.sprite(0,120,'gameover');
+      this.lost = this.game.add.sprite(0,this.tileSpriteY,'gameover');
       this.lost.animations.add('gameover');
       this.lost.animations.play('gameover',24,true);
       this.lost.scale.setTo(428/500,428/500);
@@ -317,11 +323,6 @@
       });
       fadeIn.start();
 
-      console.log(self.tileAvailable())
-      if (!self.tileAvailable()) {
-        if (!self.tileMatchesAvailable()) self.gameOver();
-      }
-
     },
     toRow: function(n) {
       return Math.floor(n/4);
@@ -385,7 +386,6 @@
         }
       }
 
-      console.log(match);
       return match;
     },
 
@@ -468,6 +468,11 @@
         }
         //item.text = value;
       })
+
+      console.log(self.tileAvailable())
+      if (!self.tileAvailable()) {
+        if (!self.tileMatchesAvailable()) self.gameOver();
+      }
     }
   };
   

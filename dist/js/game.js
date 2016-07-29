@@ -4,7 +4,7 @@
 //global variables
 window.onload = function () {
 	var gameWidth = 428;
-	var gameHeight= 650;
+	var gameHeight= window.innerHeight;
 	var game = new Phaser.Game(gameWidth,gameHeight, Phaser.AUTO, 'phaser');
 
 	// Game States
@@ -27,39 +27,29 @@ Boot.prototype = {
   },
   create: function() {
     this.game.input.maxPointers = 1;
+    this.scaleStage();
+
     this.game.state.start('preload');
+  },
+  scaleStage: function() {
+    this.gameWidth = 428;
+    this.gameHeight= 700;
 
-    var gameWidth = 428;
-    var gameHeight= 650;
-
-    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;            
-    this.game.scale.minWidth = gameWidth/2;            
-    this.game.scale.minHeight = gameHeight/2;
-    this.game.scale.pageAlignHorizontally = true;            
-    this.game.scale.pageAlignVertically = true; 
-
-    if (this.game.device.desktop || window.innerWidth < 500) {
-                   
-       this.game.scale.maxWidth = gameWidth;            
-       this.game.scale.maxHeight = gameHeight;             
-
-    } else {   
-                       
-    	this.game.scale.maxWidth = gameWidth; 
-    	//You can change this to gameWidth*2.5 if needed            
-    	this.game.scale.maxHeight = gameWidth*1.5; 
-    	//Make sure these values are proportional to the gameWidth and gameHeight            
-           
-    	this.game.scale.forceOrientation(true, false);            
-    	this.game.scale.hasResized.add(this.gameResized, this);            
-    	this.game.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);            
-    	this.game.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);            
+    if (this.game.device.desktop || this.game.width > 500) {
+      this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL; 
+    } else {
+      this.scale.scaleMode = Phaser.ScaleManager.NO_BORDER;
+      this.scale.forceOrientation(true, true);
     }
-
-    this.game.scale.parentIsWindow = true;        
-    this.game.scale.refresh();
-
-  }
+    
+    this.scale.minWidth = this.gameWidth/2;
+    this.scale.minHeight = this.gameHeight/2;
+    this.scale.maxWidth = this.gameWidth;
+    this.scale.maxHeight = this.gameHeight;
+  
+    // document.getElementById("phaser").style.height = window.innerHeight-30+"px";//The css for body includes 1px top margin, I believe this is the cause for this -1
+    // document.getElementById("phaser").style.overflow = "hidden";
+  }, 
 };
 
 module.exports = Boot;
@@ -140,10 +130,10 @@ module.exports = Menu;
     this.downKey;
     this.leftKey;
     this.rightKey;
-    this.backgroundColor = '57407c';
-    this.font = "flappyfont";
-    this.scoreString = "SCORE \n";
-
+    this.backgroundColor  = '57407c';
+    this.font             = "flappyfont";
+    this.scoreString      = "SCORE \n";
+    
     // variables used to detect and manage swipes
     this.startX, this.startY, this.endX, this.endY;
   }
@@ -152,9 +142,15 @@ module.exports = Menu;
       
     },
     create: function() {
-      
+      this.tileSpriteY      = this.game.width*1/3;
       // background color
       this.game.stage.backgroundColor  = this.backgroundColor;
+
+      this.waveone = this.game.add.sprite(this.game.width/2,120, 'waveone');
+      this.waveone.anchor.setTo(0.5,0.5);
+
+      // this.wavetwo = this.game.add.sprite(this.game.width/2,592, 'wavetwo');
+      // this.wavetwo.anchor.setTo(0.5,0.5);
 
       // add text      
       this.scoreText = this.game.add.bitmapText(this.game.width*3/4,60,"flappyfont",this.scoreString + this.score.toString(),24);
@@ -167,7 +163,7 @@ module.exports = Menu;
       this.tileSprites.align(4,4,tileSize,tileSize, Phaser.CENTER);
 
       this.tileSprites.x = 0;
-      this.tileSprites.y = 120;
+      this.tileSprites.y = this.tileSpriteY;
 
       this.addTwo();
       this.addTwo();
@@ -249,7 +245,7 @@ module.exports = Menu;
 
       this.tileSprites.destroy();
 
-      this.won = this.game.add.sprite(0,120,'2048');
+      this.won = this.game.add.sprite(0,this.tileSpriteY,'2048');
       this.won.animations.add('victory');
       this.won.animations.play('victory',24,true);
       this.won.scale.setTo(428/500,428/500);
@@ -259,7 +255,7 @@ module.exports = Menu;
       this.canMove = false;
       this.tileSprites.destroy();
       
-      this.lost = this.game.add.sprite(0,120,'gameover');
+      this.lost = this.game.add.sprite(0,this.tileSpriteY,'gameover');
       this.lost.animations.add('gameover');
       this.lost.animations.play('gameover',24,true);
       this.lost.scale.setTo(428/500,428/500);
@@ -449,11 +445,6 @@ module.exports = Menu;
       });
       fadeIn.start();
 
-      console.log(self.tileAvailable())
-      if (!self.tileAvailable()) {
-        if (!self.tileMatchesAvailable()) self.gameOver();
-      }
-
     },
     toRow: function(n) {
       return Math.floor(n/4);
@@ -517,7 +508,6 @@ module.exports = Menu;
         }
       }
 
-      console.log(match);
       return match;
     },
 
@@ -600,6 +590,11 @@ module.exports = Menu;
         }
         //item.text = value;
       })
+
+      console.log(self.tileAvailable())
+      if (!self.tileAvailable()) {
+        if (!self.tileMatchesAvailable()) self.gameOver();
+      }
     }
   };
   
@@ -620,10 +615,9 @@ Preload.prototype = {
     this.asset = this.game.add.sprite(this.game.width/2,this.game.height/2,'preloader');
     this.asset.anchor.setTo(0.5,0.5);
     this.game.load.setPreloadSprite(this.asset);
-    //this.load.spritesheet('preloader','preloader.png',220,19,10);
-    // this.asset.anchor.setTo(0.5,0.5);
-    // this.load.setPreloadSprite(this.asset);
 
+    this.load.image('waveone','assets/waves.gif');
+    this.load.image('wavetwo','assets/waves.gif');
     this.load.image('background','assets/background.png');
     this.load.image('startButton','assets/start-button.png');
     this.load.image('replayButton','assets/replay-button.png');
