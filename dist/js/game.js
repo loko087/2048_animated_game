@@ -23,7 +23,7 @@ function Boot() {
 
 Boot.prototype = {
   preload: function() {
-    this.load.image('preloader', 'assets/preloader.gif');
+    this.load.spritesheet('preloader', 'assets/preloader.png',220,20,10);
   },
   create: function() {
     this.game.input.maxPointers = 1;
@@ -44,7 +44,7 @@ Boot.prototype = {
        this.game.scale.maxHeight = gameHeight;             
 
     } else {   
-      console.log('sdsd')                   
+                       
     	this.game.scale.maxWidth = gameWidth; 
     	//You can change this to gameWidth*2.5 if needed            
     	this.game.scale.maxHeight = gameWidth*1.5; 
@@ -611,15 +611,18 @@ module.exports = Menu;
 function Preload() {
   this.asset = null;
   this.ready = false;
-  this.background = '57407C';
+  this.backgroundColor = '57407C';
 }
 
 Preload.prototype = {
   preload: function() {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
-    this.asset = this.add.sprite(this.width/2,this.height/2,'preloader');
+    this.asset = this.game.add.sprite(this.game.width/2,this.game.height/2,'preloader');
     this.asset.anchor.setTo(0.5,0.5);
-    this.load.setPreloadSprite(this.asset);
+    this.game.load.setPreloadSprite(this.asset);
+    //this.load.spritesheet('preloader','preloader.png',220,19,10);
+    // this.asset.anchor.setTo(0.5,0.5);
+    // this.load.setPreloadSprite(this.asset);
 
     this.load.image('background','assets/background.png');
     this.load.image('startButton','assets/start-button.png');
@@ -638,6 +641,10 @@ Preload.prototype = {
   },
   create: function() {
     this.asset.cropEnabled = false;
+    this.game.stage.backgroundColor  = this.backgroundColor;
+
+    this.asset.animations.add('loading');
+    this.asset.animations.play('loading',10,true);
   },
   update: function() {
     if(!!this.ready) {

@@ -5,7 +5,7 @@ function Boot() {
 
 Boot.prototype = {
   preload: function() {
-    this.load.image('preloader', 'assets/preloader.gif');
+    this.load.spritesheet('preloader', 'assets/preloader.png',220,20,10);
   },
   create: function() {
     this.game.input.maxPointers = 1;
@@ -26,7 +26,7 @@ Boot.prototype = {
        this.game.scale.maxHeight = gameHeight;             
 
     } else {   
-      console.log('sdsd')                   
+                       
     	this.game.scale.maxWidth = gameWidth; 
     	//You can change this to gameWidth*2.5 if needed            
     	this.game.scale.maxHeight = gameWidth*1.5; 
