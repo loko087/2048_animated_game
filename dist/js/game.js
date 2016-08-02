@@ -493,17 +493,15 @@ module.exports = Menu;
       var left, right, top, bottom;
       var checkPos = [-1,1,-4,4];
       var match    = true;
-
+      console.log(self.fieldArray)
       for (var i = 0; i < size; i++) {
         for (var j = 0; j < checkPos.length; j++) {
           var pos = checkPos[j] +  i;
-          if ( pos > 0 ) {
-            
+          if ( pos >= 0 ) {
             if ((self.fieldArray[i] == self.fieldArray[pos])) {
               match = false;
               return;
             } 
-            
           }
         }
       }
@@ -540,7 +538,7 @@ module.exports = Menu;
     updateNumbers: function() {
       var self = this;
 
-      self.tileSprites.forEach(function(item) {
+      self.tileSprites.forEach(function(item, index) {
         var value = self.fieldArray[item.pos];
 
         if (value == 2048) {
@@ -588,13 +586,17 @@ module.exports = Menu;
             item.play('two');
             break;
         }
-        //item.text = value;
-      })
 
-      console.log(self.tileAvailable())
-      if (!self.tileAvailable()) {
-        if (!self.tileMatchesAvailable()) self.gameOver();
-      }
+        console.log(self.tileSprites.length)
+        console.log(index)
+        if (!self.tileAvailable()) {
+          if (!self.tileMatchesAvailable()) {
+            self.gameOver();
+          }
+        }
+
+      })
+      
     }
   };
   
