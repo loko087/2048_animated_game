@@ -15,19 +15,3 @@ body {
 	margin-top: 0 !important;
 	height: 100% !important;
 }
-
-.text-center {
-	text-align: center;
-}
-
-button {
-	padding: 10px;
-	border: 2px solid #fff;
-	border-radius: 5px;
-	margin-left: 100vw/3;
-	margin-top: 10px;
-	font-weight: bold;
-	font-size: 1em;
-	color: #fff;
-	background: #57407C;
-}

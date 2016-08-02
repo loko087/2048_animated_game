@@ -120,26 +120,46 @@
     },
 
     victory: function() {
-
-      this.tileSprites.destroy();
+      var self = this;
+      //this.tileSprites.destroy();
+      self.tileSprites.destroy();
 
       this.won = this.game.add.sprite(0,this.tileSpriteY,'2048');
       this.won.animations.add('victory');
       this.won.animations.play('victory',24,true);
       this.won.scale.setTo(428/500,428/500);
+      this.won.alpha = 0;
 
+      var fadeIn = this.add.tween(this.won);
+      fadeIn.to({alpha:1},1000);
+      fadeIn.start();
+
+      // fadeIn.onComplete.add(function(){
+        
+      // });
     },
     gameOver: function() {
+      var self = this;
       this.canMove = false;
-      this.tileSprites.destroy();
       
       this.lost = this.game.add.sprite(0,this.tileSpriteY,'gameover');
+      this.lost.alpha = 0;
       this.lost.animations.add('gameover');
       this.lost.animations.play('gameover',24,true);
       this.lost.scale.setTo(428/500,428/500);
 
-      console.log("Game Over");
-      
+      var fadeIn = this.add.tween(this.lost);
+      fadeIn.to({alpha:1},1000);
+
+      var fadeOut = this.add.tween(this.tileSprites);
+      fadeOut.to({alpha:0},1000);
+
+      fadeOut.onComplete.add(function(){
+        self.tileSprites.destroy();
+        fadeIn.start();
+      });
+      fadeOut.start();
+
     },
     moveUp: function() {
       var self = this;
