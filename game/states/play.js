@@ -43,9 +43,28 @@
       this.tileSprites.x = 0;
       this.tileSprites.y = this.tileSpriteY;
 
+      // Start game with two numbers generated
       this.addTwo();
       this.addTwo();
-
+      
+      // test game 
+      // this.addTwo(8);
+      // this.addTwo(4);
+      // this.addTwo(2);
+      // this.addTwo(32);
+      // this.addTwo(4);
+      // this.addTwo(128);
+      // this.addTwo(64);
+      // this.addTwo(2);
+      // this.addTwo(8);
+      // this.addTwo(16);
+      // this.addTwo(512);
+      // this.addTwo(32);
+      // this.addTwo(2);
+      // this.addTwo(32);
+      // this.addTwo(4);
+      // this.addTwo(8);
+      
       // audio added
       this.scoreSound = this.game.add.audio('score');
 
@@ -55,59 +74,59 @@
       this.game.input.onDown.add(this.beginSwipe, this);
     },
     update: function() {
-      	
-      	// if (this.game.device.desktop) {
-	      // listeners for WASD keys
-		this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-		this.upKey.onDown.add(this.moveUp,this);
+        
+        // if (this.game.device.desktop) {
+        // listeners for WASD keys
+    this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+    this.upKey.onDown.add(this.moveUp,this);
 
-		this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-		this.downKey.onDown.add(this.moveDown,this);
+    this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+    this.downKey.onDown.add(this.moveDown,this);
 
-		this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-		this.leftKey.onDown.add(this.moveLeft,this);
+    this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+    this.leftKey.onDown.add(this.moveLeft,this);
 
-		this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-		this.rightKey.onDown.add(this.moveRight,this);
+    this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
+    this.rightKey.onDown.add(this.moveRight,this);
 
-		// once the level has been created, we wait for the player to touch or click, then we call
-		// beginSwipe function
-		this.game.input.onDown.add(this.beginSwipe, this);
+    // once the level has been created, we wait for the player to touch or click, then we call
+    // beginSwipe function
+    this.game.input.onDown.add(this.beginSwipe, this);
     },
     beginSwipe: function() {
-    	console.log('swipe')
-    	var self = this;
-    	self.startX = self.game.input.worldX;
-    	self.startY = self.game.input.worldY;
+      console.log('swipe')
+      var self = this;
+      self.startX = self.game.input.worldX;
+      self.startY = self.game.input.worldY;
 
-    	self.game.input.onDown.remove(self.beginSwipe, this);
-    	self.game.input.onUp.add(self.endSwipe, this);
+      self.game.input.onDown.remove(self.beginSwipe, this);
+      self.game.input.onUp.add(self.endSwipe, this);
     },
     endSwipe: function() {
-    	var self = this;
-    	
-    	// saving mouse/finger coordinates
-    	self.endX = self.game.input.worldX;
-    	self.endY = self.game.input.worldY;
+      var self = this;
+      
+      // saving mouse/finger coordinates
+      self.endX = self.game.input.worldX;
+      self.endY = self.game.input.worldY;
 
-    	//detect distance of begin/end of x/y
-    	var distX = self.endX - self.startX;
-    	var distY = self.endY - self.startY;
+      //detect distance of begin/end of x/y
+      var distX = self.endX - self.startX;
+      var distY = self.endY - self.startY;
 
-    	// horizontal swipe
-    	// x distance is at least twice the y distance 
-    	// and the amount of horizontal distance is at least 10 pixels
-    	if (Math.abs(distX) > Math.abs(distY)*2 && Math.abs(distX) > 10) {
-    		(distX > 0) ? self.moveRight():self.moveLeft();
-    	}
+      // horizontal swipe
+      // x distance is at least twice the y distance 
+      // and the amount of horizontal distance is at least 10 pixels
+      if (Math.abs(distX) > Math.abs(distY)*2 && Math.abs(distX) > 10) {
+        (distX > 0) ? self.moveRight():self.moveLeft();
+      }
 
-    	// vertical swipe
-    	if (Math.abs(distY) > Math.abs(distX)*2 && Math.abs(distY) > 10) {
-    		(distY > 0) ? self.moveDown():self.moveUp();
-    	}
+      // vertical swipe
+      if (Math.abs(distY) > Math.abs(distX)*2 && Math.abs(distY) > 10) {
+        (distY > 0) ? self.moveDown():self.moveUp();
+      }
 
-    	self.game.input.onDown.add(self.beginSwipe, self);
-    	self.game.input.onUp.remove(self.endSwipe, self);
+      self.game.input.onDown.add(self.beginSwipe, self);
+      self.game.input.onUp.remove(self.endSwipe, self);
     },
     init: function() {
       this.fieldArray = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
@@ -120,6 +139,7 @@
     },
 
     victory: function() {
+<<<<<<< HEAD
       var self = this;
       //this.tileSprites.destroy();
       self.tileSprites.destroy();
@@ -129,6 +149,11 @@
       this.won.animations.play('victory',24,true);
       this.won.scale.setTo(428/500,428/500);
       this.won.alpha = 0;
+=======
+      localStorage.setItem("gamescore", this.score.toString());
+      localStorage.setItem("gameresult","victory");
+      this.game.state.start("gameover");
+>>>>>>> d4e37a2e789a5d3aba1cff63556f7ad37882759b
 
       var fadeIn = this.add.tween(this.won);
       fadeIn.to({alpha:1},1000);
@@ -139,6 +164,7 @@
       // });
     },
     gameOver: function() {
+<<<<<<< HEAD
       var self = this;
       this.canMove = false;
       
@@ -160,6 +186,12 @@
       });
       fadeOut.start();
 
+=======
+      localStorage.setItem("gamescore", this.score.toString());
+      localStorage.setItem("gameresult","lost");
+      this.game.state.start("gameover");
+      console.log("Game Over");
+>>>>>>> d4e37a2e789a5d3aba1cff63556f7ad37882759b
     },
     moveUp: function() {
       var self = this;
@@ -290,7 +322,7 @@
       }
     },
 
-    addTwo: function() {
+    addTwo: function(numberAssigned) {
       console.log(this.fieldArray)
       do {
         var randomValue = Math.floor(Math.random()*16);
@@ -298,7 +330,7 @@
 
       var number = [2,4];
 
-      this.fieldArray[randomValue] = number[this.game.rnd.integerInRange(0,1)];
+      this.fieldArray[randomValue] = (numberAssigned) ? numberAssigned : number[this.game.rnd.integerInRange(0,1)];
 
       var tileSize = this.tileSize;
       var scale  = (this.world.width/4/this.tileSize);
@@ -372,39 +404,45 @@
     tileAvailable: function() {
       var self = this;
       var avai = false;
-
       self.fieldArray.forEach(function(item) {
         if (item == 0) {
           avai = true;
-          return avai;
+          return;
         }
       })
 
-      return avai;
+      if (!avai) self.tileMatchesAvailable();
+
     },
 
     tileMatchesAvailable: function() {
-
+      
       var self = this;
       var size = self.fieldArray.length;
       var tilePerRow = 4;
       var left, right, top, bottom;
       var checkPos = [-1,1,-4,4];
-      var match    = true;
-      console.log(self.fieldArray)
+      var match    = false;
+     
+      console.log(checkPos.length)
+      console.log(self.fieldArray.length)
       for (var i = 0; i < size; i++) {
+
         for (var j = 0; j < checkPos.length; j++) {
           var pos = checkPos[j] +  i;
-          if ( pos >= 0 ) {
-            if ((self.fieldArray[i] == self.fieldArray[pos])) {
-              match = false;
+          
+          if ( !((i + 1 ) % 4 == 0 && checkPos[j] == 1) && !( i % 4 == 0 && checkPos[j] == -1)) {
+            if (( pos >= 0 && pos < 17) && (self.fieldArray[i] == self.fieldArray[pos])) {
+              match = true;
               return;
             } 
           }
+          
         }
       }
 
-      return match;
+      if (!match) self.gameOver();
+      
     },
 
     moveTile: function(tile,from, to, remove) {
@@ -485,12 +523,8 @@
             break;
         }
 
-        console.log(self.tileSprites.length)
-        console.log(index)
-        if (!self.tileAvailable()) {
-          if (!self.tileMatchesAvailable()) {
-            self.gameOver();
-          }
+        if (self.fieldArray.length == 16) {
+          self.tileAvailable();
         }
 
       })
