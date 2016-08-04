@@ -60,24 +60,54 @@ function GameOver() {}
 
 GameOver.prototype = {
   preload: function () {
-
+    this.score = localStorage.getItem("gamescore");
+    this.font             = "flappyfont";
+    this.scoreString      = "SCORE \n";
   },
   create: function () {
-    var style = { font: '65px Arial', fill: '#ffffff', align: 'center'};
-    this.titleText = this.game.add.text(this.game.world.centerX,100, 'Game Over!', style);
-    this.titleText.anchor.setTo(0.5, 0.5);
+    this.tileSpriteY           = this.game.width*1/3;
+    this.waveone = this.game.add.sprite(this.game.width/2,120, 'waveone');
+    this.waveone.anchor.setTo(0.5,0.5);
 
-    this.congratsText = this.game.add.text(this.game.world.centerX, 200, 'You Win!', { font: '32px Arial', fill: '#ffffff', align: 'center'});
-    this.congratsText.anchor.setTo(0.5, 0.5);
+     // add text      
+    this.scoreText = this.game.add.bitmapText(this.game.width*3/4,60,"flappyfont",this.scoreString + this.score.toString(),24);
+    this.scoreText.align = 'center';
+    this.scoreText.anchor.setTo(0.5,0.5);
 
-    this.instructionText = this.game.add.text(this.game.world.centerX, 300, 'Click To Play Again', { font: '16px Arial', fill: '#ffffff', align: 'center'});
-    this.instructionText.anchor.setTo(0.5, 0.5);
+    // declare group of tiles
+    var tileSize = window.innerWidth/4;
+    this.tileSprites = this.game.add.group();
+    this.tileSprites.align(4,4,tileSize,tileSize, Phaser.CENTER);
+
+    this.tileSprites.x = 0;
+    this.tileSprites.y = this.tileSpriteY;
+
+    this.replayButton = this.game.add.button(this.game.width*1/4,60,'replayButton', this.newGame, this);
+    this.replayButton.anchor.setTo(0.5,0.5);
+
+    (localStorage.getItem("gameresult") != "lost") ? this.victory():this.lose(); 
   },
   update: function () {
     if(this.game.input.activePointer.justPressed()) {
-      this.game.state.start('play');
+      //this.game.state.start('play');
     }
-  }
+  },
+  newGame: function() {
+    this.game.state.start('play');
+  },
+  lose: function() {
+    this.lose = this.game.add.sprite(0,this.tileSpriteY,'gameover');
+    this.lose.animations.add('gameend');
+    this.lose.animations.play('gameend',24,true);
+    this.lose.scale.setTo(428/500,428/500);
+  },
+  victory: function() {
+
+    this.won = this.game.add.sprite(0,this.tileSpriteY,'2048');
+    this.won.animations.add('victory');
+    this.won.animations.play('victory',24,true);
+    this.won.scale.setTo(428/500,428/500);
+  },
 };
 module.exports = GameOver;
 
@@ -91,12 +121,12 @@ Menu.prototype = {
 
   },
   create: function() {
+
     this.stage.backgroundColor = '57407c';
 
     this.title = this.game.add.sprite(this.game.world.centerX,this.game.world.centerY-50,'title');
     this.title.anchor.setTo(0.5,0.5);
     this.title.scale.setTo(0.8,0.8);
-
 
     this.startButton = this.game.add.button(this.game.world.centerX,this.game.world.centerY+50,'startButton', this.startButton, this);
     this.startButton.anchor.setTo(0.5,0.5);
@@ -105,7 +135,7 @@ Menu.prototype = {
     this.title.animations.play('waving',24,true);
 
     // jump to play stage for development
-    this.game.state.start('play');
+    // this.game.state.start('gameover');
 
   },
   update: function() {
@@ -165,9 +195,28 @@ module.exports = Menu;
       this.tileSprites.x = 0;
       this.tileSprites.y = this.tileSpriteY;
 
+      // Start game with two numbers generated
       this.addTwo();
       this.addTwo();
-
+      
+      // test game 
+      // this.addTwo(8);
+      // this.addTwo(4);
+      // this.addTwo(2);
+      // this.addTwo(32);
+      // this.addTwo(4);
+      // this.addTwo(128);
+      // this.addTwo(64);
+      // this.addTwo(2);
+      // this.addTwo(8);
+      // this.addTwo(16);
+      // this.addTwo(512);
+      // this.addTwo(32);
+      // this.addTwo(2);
+      // this.addTwo(32);
+      // this.addTwo(4);
+      // this.addTwo(8);
+      
       // audio added
       this.scoreSound = this.game.add.audio('score');
 
@@ -177,59 +226,59 @@ module.exports = Menu;
       this.game.input.onDown.add(this.beginSwipe, this);
     },
     update: function() {
-      	
-      	// if (this.game.device.desktop) {
-	      // listeners for WASD keys
-		this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-		this.upKey.onDown.add(this.moveUp,this);
+        
+        // if (this.game.device.desktop) {
+        // listeners for WASD keys
+    this.upKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+    this.upKey.onDown.add(this.moveUp,this);
 
-		this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-		this.downKey.onDown.add(this.moveDown,this);
+    this.downKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+    this.downKey.onDown.add(this.moveDown,this);
 
-		this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-		this.leftKey.onDown.add(this.moveLeft,this);
+    this.leftKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+    this.leftKey.onDown.add(this.moveLeft,this);
 
-		this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-		this.rightKey.onDown.add(this.moveRight,this);
+    this.rightKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
+    this.rightKey.onDown.add(this.moveRight,this);
 
-		// once the level has been created, we wait for the player to touch or click, then we call
-		// beginSwipe function
-		this.game.input.onDown.add(this.beginSwipe, this);
+    // once the level has been created, we wait for the player to touch or click, then we call
+    // beginSwipe function
+    this.game.input.onDown.add(this.beginSwipe, this);
     },
     beginSwipe: function() {
-    	console.log('swipe')
-    	var self = this;
-    	self.startX = self.game.input.worldX;
-    	self.startY = self.game.input.worldY;
+      console.log('swipe')
+      var self = this;
+      self.startX = self.game.input.worldX;
+      self.startY = self.game.input.worldY;
 
-    	self.game.input.onDown.remove(self.beginSwipe, this);
-    	self.game.input.onUp.add(self.endSwipe, this);
+      self.game.input.onDown.remove(self.beginSwipe, this);
+      self.game.input.onUp.add(self.endSwipe, this);
     },
     endSwipe: function() {
-    	var self = this;
-    	
-    	// saving mouse/finger coordinates
-    	self.endX = self.game.input.worldX;
-    	self.endY = self.game.input.worldY;
+      var self = this;
+      
+      // saving mouse/finger coordinates
+      self.endX = self.game.input.worldX;
+      self.endY = self.game.input.worldY;
 
-    	//detect distance of begin/end of x/y
-    	var distX = self.endX - self.startX;
-    	var distY = self.endY - self.startY;
+      //detect distance of begin/end of x/y
+      var distX = self.endX - self.startX;
+      var distY = self.endY - self.startY;
 
-    	// horizontal swipe
-    	// x distance is at least twice the y distance 
-    	// and the amount of horizontal distance is at least 10 pixels
-    	if (Math.abs(distX) > Math.abs(distY)*2 && Math.abs(distX) > 10) {
-    		(distX > 0) ? self.moveRight():self.moveLeft();
-    	}
+      // horizontal swipe
+      // x distance is at least twice the y distance 
+      // and the amount of horizontal distance is at least 10 pixels
+      if (Math.abs(distX) > Math.abs(distY)*2 && Math.abs(distX) > 10) {
+        (distX > 0) ? self.moveRight():self.moveLeft();
+      }
 
-    	// vertical swipe
-    	if (Math.abs(distY) > Math.abs(distX)*2 && Math.abs(distY) > 10) {
-    		(distY > 0) ? self.moveDown():self.moveUp();
-    	}
+      // vertical swipe
+      if (Math.abs(distY) > Math.abs(distX)*2 && Math.abs(distY) > 10) {
+        (distY > 0) ? self.moveDown():self.moveUp();
+      }
 
-    	self.game.input.onDown.add(self.beginSwipe, self);
-    	self.game.input.onUp.remove(self.endSwipe, self);
+      self.game.input.onDown.add(self.beginSwipe, self);
+      self.game.input.onUp.remove(self.endSwipe, self);
     },
     init: function() {
       this.fieldArray = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
@@ -242,26 +291,16 @@ module.exports = Menu;
     },
 
     victory: function() {
-
-      this.tileSprites.destroy();
-
-      this.won = this.game.add.sprite(0,this.tileSpriteY,'2048');
-      this.won.animations.add('victory');
-      this.won.animations.play('victory',24,true);
-      this.won.scale.setTo(428/500,428/500);
+      localStorage.setItem("gamescore", this.score.toString());
+      localStorage.setItem("gameresult","victory");
+      this.game.state.start("gameover");
 
     },
     gameOver: function() {
-      this.canMove = false;
-      this.tileSprites.destroy();
-      
-      this.lost = this.game.add.sprite(0,this.tileSpriteY,'gameover');
-      this.lost.animations.add('gameover');
-      this.lost.animations.play('gameover',24,true);
-      this.lost.scale.setTo(428/500,428/500);
-
+      localStorage.setItem("gamescore", this.score.toString());
+      localStorage.setItem("gameresult","lost");
+      this.game.state.start("gameover");
       console.log("Game Over");
-      
     },
     moveUp: function() {
       var self = this;
@@ -392,7 +431,7 @@ module.exports = Menu;
       }
     },
 
-    addTwo: function() {
+    addTwo: function(numberAssigned) {
       console.log(this.fieldArray)
       do {
         var randomValue = Math.floor(Math.random()*16);
@@ -400,7 +439,7 @@ module.exports = Menu;
 
       var number = [2,4];
 
-      this.fieldArray[randomValue] = number[this.game.rnd.integerInRange(0,1)];
+      this.fieldArray[randomValue] = (numberAssigned) ? numberAssigned : number[this.game.rnd.integerInRange(0,1)];
 
       var tileSize = this.tileSize;
       var scale  = (this.world.width/4/this.tileSize);
@@ -474,39 +513,45 @@ module.exports = Menu;
     tileAvailable: function() {
       var self = this;
       var avai = false;
-
       self.fieldArray.forEach(function(item) {
         if (item == 0) {
           avai = true;
-          return avai;
+          return;
         }
       })
 
-      return avai;
+      if (!avai) self.tileMatchesAvailable();
+
     },
 
     tileMatchesAvailable: function() {
-
+      
       var self = this;
       var size = self.fieldArray.length;
       var tilePerRow = 4;
       var left, right, top, bottom;
       var checkPos = [-1,1,-4,4];
-      var match    = true;
-      console.log(self.fieldArray)
+      var match    = false;
+     
+      console.log(checkPos.length)
+      console.log(self.fieldArray.length)
       for (var i = 0; i < size; i++) {
+
         for (var j = 0; j < checkPos.length; j++) {
           var pos = checkPos[j] +  i;
-          if ( pos >= 0 ) {
-            if ((self.fieldArray[i] == self.fieldArray[pos])) {
-              match = false;
+          
+          if ( !((i + 1 ) % 4 == 0 && checkPos[j] == 1) && !( i % 4 == 0 && checkPos[j] == -1)) {
+            if (( pos >= 0 && pos < 17) && (self.fieldArray[i] == self.fieldArray[pos])) {
+              match = true;
               return;
             } 
           }
+          
         }
       }
 
-      return match;
+      if (!match) self.gameOver();
+      
     },
 
     moveTile: function(tile,from, to, remove) {
@@ -587,12 +632,8 @@ module.exports = Menu;
             break;
         }
 
-        console.log(self.tileSprites.length)
-        console.log(index)
-        if (!self.tileAvailable()) {
-          if (!self.tileMatchesAvailable()) {
-            self.gameOver();
-          }
+        if (self.fieldArray.length == 16) {
+          self.tileAvailable();
         }
 
       })
