@@ -12,8 +12,10 @@
 # Time goal: 
 whenever I want to code this game
 
+# Demo:
+- Web demo: http://hienluong.herokuapp.com/projects/2048
+
 # Coming Soon
-- Web deployment
 - Android deployment
 - IOS deployment (Apple ID is expensive ... thinking )
 
