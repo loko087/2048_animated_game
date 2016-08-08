@@ -1,6 +1,7 @@
 body {
   background-color: #57407C;
   margin: 0;
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
 }
 
 #phaser {
@@ -15,3 +16,58 @@ body {
 	margin-top: 0 !important;
 	height: 100% !important;
 }
+#instruction {
+    position: absolute;
+    width: 140px;
+    height: 90px;
+    text-align: center;
+    transform: translate(-50%,-50%);
+    top: 20%;
+    left: 15%;
+}
+#instruction .page-header {
+	border-bottom: 2px solid #fff;
+	margin-bottom: 20px;
+}
+
+#instruction .page-header > h2 {
+	text-transform: uppercase;
+	color: #fff;
+	text-align: center;
+}
+#instruction .inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.key {
+	width: 40px;
+	height: 40px;
+	border-radius: 5px;
+	border: 1px solid #fff;
+	position: absolute;
+	font-size: 2em;
+    color: #fff;
+    font-weight: 300;
+}
+
+#W-key {
+    left: 35%;
+    top: -2px;
+}
+
+#A-key {
+	bottom: 0;
+}
+
+#S-key {
+	bottom: 0;
+    left: 48px;
+}
+
+#D-key {
+	bottom: 0;
+    right: 0px;
+}
+

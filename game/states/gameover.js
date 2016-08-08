@@ -29,7 +29,7 @@ GameOver.prototype = {
     this.replayButton = this.game.add.button(this.game.width*1/4,60,'replayButton', this.newGame, this);
     this.replayButton.anchor.setTo(0.5,0.5);
 
-    (localStorage.getItem("gameresult") != "lost") ? this.victory():this.lose(); 
+    (localStorage.getItem("gameresult") != "lost") ? this.victory:this.lose; 
   },
   update: function () {
     if(this.game.input.activePointer.justPressed()) {
@@ -46,7 +46,6 @@ GameOver.prototype = {
     this.lose.scale.setTo(428/500,428/500);
   },
   victory: function() {
-
     this.won = this.game.add.sprite(0,this.tileSpriteY,'2048');
     this.won.animations.add('victory');
     this.won.animations.play('victory',24,true);

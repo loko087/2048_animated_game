@@ -1,3 +1,154 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+//global variables
+window.onload = function () {
+	var gameWidth = 428;
+	var gameHeight= window.innerHeight;
+	var game = new Phaser.Game(gameWidth,gameHeight, Phaser.AUTO, 'phaser');
+
+	// Game States
+	game.state.add('boot', require('./states/boot'));
+	game.state.add('gameover', require('./states/gameover'));
+	game.state.add('menu', require('./states/menu'));
+	game.state.add('play', require('./states/play'));
+	game.state.add('preload', require('./states/preload'));
+	game.state.start('boot');
+};
+},{"./states/boot":2,"./states/gameover":3,"./states/menu":4,"./states/play":5,"./states/preload":6}],2:[function(require,module,exports){
+'use strict';
+
+function Boot() {
+}
+
+Boot.prototype = {
+  preload: function() {
+    this.load.spritesheet('preloader', 'assets/preloader.png',220,20,10);
+  },
+  create: function() {
+    this.game.input.maxPointers = 1;
+    this.scaleStage();
+
+    this.game.state.start('preload');
+  },
+  scaleStage: function() {
+    this.gameWidth = 428;
+    this.gameHeight= 700;
+
+    if (this.game.device.desktop || this.game.width > 500) {
+      this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL; 
+    } else {
+      this.scale.scaleMode = Phaser.ScaleManager.NO_BORDER;
+      this.scale.forceOrientation(true, true);
+    }
+    
+    this.scale.minWidth = this.gameWidth/2;
+    this.scale.minHeight = this.gameHeight/2;
+    this.scale.maxWidth = this.gameWidth;
+    this.scale.maxHeight = this.gameHeight;
+  
+    // document.getElementById("phaser").style.height = window.innerHeight-30+"px";//The css for body includes 1px top margin, I believe this is the cause for this -1
+    // document.getElementById("phaser").style.overflow = "hidden";
+  }, 
+};
+
+module.exports = Boot;
+},{}],3:[function(require,module,exports){
+
+'use strict';
+function GameOver() {}
+
+GameOver.prototype = {
+  preload: function () {
+    this.score = localStorage.getItem("gamescore");
+    this.font             = "flappyfont";
+    this.scoreString      = "SCORE \n";
+  },
+  create: function () {
+    this.tileSpriteY           = this.game.width*1/3;
+    this.waveone = this.game.add.sprite(this.game.width/2,120, 'waveone');
+    this.waveone.anchor.setTo(0.5,0.5);
+
+     // add text      
+    this.scoreText = this.game.add.bitmapText(this.game.width*3/4,60,"flappyfont",this.scoreString + this.score.toString(),24);
+    this.scoreText.align = 'center';
+    this.scoreText.anchor.setTo(0.5,0.5);
+
+    // declare group of tiles
+    var tileSize = window.innerWidth/4;
+    this.tileSprites = this.game.add.group();
+    this.tileSprites.align(4,4,tileSize,tileSize, Phaser.CENTER);
+
+    this.tileSprites.x = 0;
+    this.tileSprites.y = this.tileSpriteY;
+
+    this.replayButton = this.game.add.button(this.game.width*1/4,60,'replayButton', this.newGame, this);
+    this.replayButton.anchor.setTo(0.5,0.5);
+
+    (localStorage.getItem("gameresult") != "lost") ? this.victory:this.lose; 
+  },
+  update: function () {
+    if(this.game.input.activePointer.justPressed()) {
+      //this.game.state.start('play');
+    }
+  },
+  newGame: function() {
+    this.game.state.start('play');
+  },
+  lose: function() {
+    this.lose = this.game.add.sprite(0,this.tileSpriteY,'gameover');
+    this.lose.animations.add('gameend');
+    this.lose.animations.play('gameend',24,true);
+    this.lose.scale.setTo(428/500,428/500);
+  },
+  victory: function() {
+    this.won = this.game.add.sprite(0,this.tileSpriteY,'2048');
+    this.won.animations.add('victory');
+    this.won.animations.play('victory',24,true);
+    this.won.scale.setTo(428/500,428/500);
+  },
+};
+module.exports = GameOver;
+
+},{}],4:[function(require,module,exports){
+
+'use strict';
+function Menu() {}
+
+Menu.prototype = {
+  preload: function() {
+
+  },
+  create: function() {
+
+    this.stage.backgroundColor = '57407c';
+
+    this.title = this.game.add.sprite(this.game.world.centerX,this.game.world.centerY-50,'title');
+    this.title.anchor.setTo(0.5,0.5);
+    this.title.scale.setTo(0.8,0.8);
+
+    this.startButton = this.game.add.button(this.game.world.centerX,this.game.world.centerY+50,'startButton', this.startButton, this);
+    this.startButton.anchor.setTo(0.5,0.5);
+
+    this.title.animations.add('waving');
+    this.title.animations.play('waving',24,true);
+
+    // jump to play stage for development
+    // this.game.state.start('gameover');
+
+  },
+  update: function() {
+    
+  },
+  startButton: function() {
+  	// start play state
+  	this.game.state.start('play');
+  }
+};
+
+module.exports = Menu;
+
+},{}],5:[function(require,module,exports){
 
   'use strict';
   function Play() {
@@ -529,3 +680,57 @@
   };
   
   module.exports = Play;
+},{}],6:[function(require,module,exports){
+
+'use strict';
+
+function Preload() {
+  this.asset = null;
+  this.ready = false;
+  this.backgroundColor = '57407C';
+}
+
+Preload.prototype = {
+  preload: function() {
+    this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
+    this.asset = this.game.add.sprite(this.game.width/2,this.game.height/2,'preloader');
+    this.asset.anchor.setTo(0.5,0.5);
+    this.game.load.setPreloadSprite(this.asset);
+
+    this.load.image('waveone','assets/waves.gif');
+    this.load.image('wavetwo','assets/waves.gif');
+    this.load.image('background','assets/background.png');
+    this.load.image('startButton','assets/start-button.png');
+    this.load.image('replayButton','assets/replay-button.png');
+    
+    this.load.spritesheet('title','assets/title.png',500,115,50);
+    this.load.spritesheet('2048','assets/2048.png',500,500,121);
+    this.load.spritesheet('gameover','assets/game-over.png',500,500,98);
+
+    this.load.spritesheet('tile','assets/tilesprite.png',107,107);
+
+    this.load.bitmapFont('flappyfont','assets/fonts/flappyfont/flappyfont.png','assets/fonts/flappyfont/flappyfont.fnt');
+  
+    // loading audio files
+    this.load.audio('score', 'assets/score.wav');
+  },
+  create: function() {
+    this.asset.cropEnabled = false;
+    this.game.stage.backgroundColor  = this.backgroundColor;
+
+    this.asset.animations.add('loading');
+    this.asset.animations.play('loading',10,true);
+  },
+  update: function() {
+    if(!!this.ready) {
+      this.game.state.start('menu');
+    }
+  },
+  onLoadComplete: function() {
+    this.ready = true;
+  }
+};
+
+module.exports = Preload;
+
+},{}]},{},[1]);
