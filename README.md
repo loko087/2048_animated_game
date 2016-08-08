@@ -14,9 +14,9 @@ whenever I want to code this game
 
 # Demo:
 - Web demo: http://hienluong.herokuapp.com/projects/2048
+- Android demo: https://goo.gl/qegvtJ
 
 # Coming Soon
-- Android deployment
 - IOS deployment (Apple ID is expensive ... thinking )
 
 # License
