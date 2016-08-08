@@ -21,8 +21,8 @@ Preload.prototype = {
     this.load.image('replayButton','assets/replay-button.png');
     
     this.load.spritesheet('title','assets/title.png',500,115,50);
-    this.load.spritesheet('2048','assets/2048.png',500,500,121);
-    this.load.spritesheet('gameover','assets/game-over.png',500,500,98);
+    this.load.spritesheet('2048','assets/2048.png',300,300,121);
+    this.load.spritesheet('gameover','assets/game-over.png',300,300,98);
 
     this.load.spritesheet('tile','assets/tilesprite.png',107,107);
 

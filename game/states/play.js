@@ -43,7 +43,6 @@
       // Start game with two numbers generated
       this.addTwo();
       this.addTwo();
-      
 
       // test game -win
       // this.addTwo(1024);
@@ -79,14 +78,14 @@
       this.win = this.game.add.sprite(0,this.tileSpriteY,'2048');
       this.win.animations.add('gamedone');
       this.win.animations.play('gamedone',24,true);
-      this.win.scale.setTo(428/500,428/500);
+      this.win.scale.setTo(428/300,428/300);
       this.win.alpha = 0;
 
       // lost asset
       this.lose = this.game.add.sprite(0,this.tileSpriteY,'gameover');
       this.lose.animations.add('gameend');
       this.lose.animations.play('gameend',24,true);
-      this.lose.scale.setTo(428/500,428/500);
+      this.lose.scale.setTo(428/300,428/300);
       this.lose.alpha = 0;
 
     },
