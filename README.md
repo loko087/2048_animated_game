@@ -13,7 +13,7 @@
 whenever I want to code this game
 
 # Demo:
-- Web demo: http://hienluong.herokuapp.com/projects/2048
+- Web demo: https://animated2048.herokuapp.com/index.html
 - Android demo: https://goo.gl/qegvtJ
 
 # Coming Soon
